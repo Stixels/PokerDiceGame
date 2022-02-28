@@ -7,7 +7,46 @@
     <title>Poker Dice</title>
   </head>
   <body>
-    <h1>Poker Dice Game</h1>
+    <h1 class="center">Poker Dice Game</h1>
+    <!-- Rules -->
+    <h2>Poker Dice Game Rules</h2>
+    <!-- How do you play Poker Dice - Accordion -->
+    <button class="accordion">How do you play Poker Dice?</button>
+    <div class="panel">
+      <p>
+        Each player takes a single turn and may roll the five dice up to three
+        times, trying to roll the best poker hand they can. On any of the three
+        rolls the player may set aside one or more of the dice, though they are
+        never required to. The current player may choose to end his turn after
+        the first or second roll.
+      </p>
+      <p>
+        If, at the end of the round, two or more players are tied to win, then
+        those players should roll their turns again until a clear winner is
+        established.
+      </p>
+    </div>
+    
+    <!-- How do you score - Accordion -->
+    <button class="accordion">How do you score?</button>
+    <div class="panel">
+      <p>The dice hands rank as follows (from highest to lowest):</p>
+      <ul>
+        <li>Five of a kind</li>
+        <li>Four of a kind</li>
+        <li>Full house (Three of a kind and a pair)</li>
+        <li>Three of a kind</li>
+        <li>Two pair</li>
+        <li>One pair</li>
+        <li>High card</li>
+      </ul>
+      <p>
+        Note: Straights do not count, and since there are no suits, there can be
+        no flush.
+      </p>
+      <p>Aces are high, then sixes, fives, etc.</p>
+      <p>And that's it. The player with the highest hand wins the game!</p>
+    </div>
     <script src="pokerDice.js"></script>
   </body>
 </html>
