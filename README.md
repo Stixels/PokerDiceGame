@@ -14,6 +14,7 @@
 - Allow for more players
 - Better UI to show what dice is on board, in hand, and in the bank
 - Better UI in general let's be honest
+- Fix rerolling tracks (it just picks up 3 dice right now)
 
 # Zombie Dice Game Rules
 

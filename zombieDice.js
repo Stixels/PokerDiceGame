@@ -103,7 +103,7 @@ class Game {
     this.player1 = player1;
     this.player2 = player2;
     this.brains = 0;
-    this.blasts = 0;
+    this.shotguns = 0;
     this.score = [0, 0];
     this.currentPlayer = this.player1;
     this.dice = new ZombieDice();
@@ -151,7 +151,7 @@ class Game {
     this.dice = new ZombieDice();
     // reset brains and blasts
     this.brains = 0;
-    this.blasts = 0;
+    this.shotguns = 0;
   }
 
   /**
@@ -161,7 +161,7 @@ class Game {
     var report = "";
     report += "Current Player: " + this.currentPlayer + "\n";
     report += "Current Brains: " + this.brains + "\n";
-    report += "Current Blasts: " + this.blasts + "\n" + "\n";
+    report += "Current Blasts: " + this.shotguns + "\n" + "\n";
 
     report += "Player 1 Score: " + this.score[0] + "\n";
     report += "Player 2 Score: " + this.score[1] + "\n";
@@ -209,13 +209,13 @@ rollButton.addEventListener("click", function () {
     if (face === 1) {
       game.brains++;
     } else if (face === 2) {
-      game.blasts++;
+      game.shotguns++;
     }
 
     // if blasts > 3, brains and blasts = 0 and end turn
-    if (game.blasts >= 3) {
+    if (game.shotguns >= 3) {
       game.brains = 0;
-      game.blasts = 0;
+      game.shotguns = 0;
       game.endTurn();
     }
 
