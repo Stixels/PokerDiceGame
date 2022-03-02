@@ -17,10 +17,6 @@ for (var i = 0; i < acc.length; i++) {
 /////////////////////////////////////////////////////////////////
 
 class ZombieDice {
-  // constructor makes 13 dice for the game
-  // 6 dice have green risk (3 brain sides, 1 blast side, 2 tracks sides)
-  // 4 dice have yellow risk (2 brain, 2 blast, 2 tracks)
-  // 3 dice have red risk (1 brain, 3 blast, 2 tracks)
   constructor() {
     var brain = 1;
     var blast = 2;
@@ -31,6 +27,10 @@ class ZombieDice {
     this.dice = [];
     this.hand = [];
 
+    // constructor makes 13 dice for the game
+    // 6 dice have green risk (3 brain sides, 1 blast side, 2 tracks sides)
+    // 4 dice have yellow risk (2 brain, 2 blast, 2 tracks)
+    // 3 dice have red risk (1 brain, 3 blast, 2 tracks)
     for (var i = 0; i < 6; i++) {
       this.dice.push(green);
     }
@@ -40,6 +40,8 @@ class ZombieDice {
     for (var i = 0; i < 3; i++) {
       this.dice.push(red);
     }
+
+    ///////////////////////////////////////////////////
     // shuffle zombieDice
     let currentIndex = this.dice.length,
       randomIndex;
@@ -50,33 +52,46 @@ class ZombieDice {
       this.dice[currentIndex] = this.dice[randomIndex];
       this.dice[randomIndex] = temporaryValue;
     }
+    ///////////////////////////////////////////////////
   }
 
   // get dice Color
   getColor(dice) {
-    if (dice === green) {
+    // if dice has 3 brain sides, return green
+    // if dice has 2 brain sides, return yellow
+    // if dice has 1 brain side, return red
+    var brain = 0;
+    for (var i = 0; i < dice.length; i++) {
+      if (dice[i] === 1) {
+        brain++;
+      }
+    }
+    if (brain === 3) {
       return "green";
-    } else if (dice === yellow) {
+    } else if (brain === 2) {
       return "yellow";
-    } else if (dice === red) {
+    } else if (brain === 1) {
       return "red";
-    } else {
-      return "undefined";
     }
   }
 
-  // get dice face
-  getFace(result) {
-    if (result === brain) {
-      return "brain";
-    } else if (result === blast) {
-      return "blast";
-    } else if (result === tracks) {
-      return "tracks";
-    }
+  // get dice face (basically rolls dice)
+  getFace(dice) {
+    // roll dice
+    var face = dice[Math.floor(Math.random() * dice.length)];
+    return face;
   }
 
-  // rolling or picking up
+  // picking up dice
+  pickUp() {
+    // pick up until there are 3 dice in hand
+    while (this.hand.length < 3) {
+      // pickup dice from zombieDice
+      var dice = this.dice.pop();
+      // add dice to hand
+      this.hand.push(dice);
+    }
+  }
 }
 
 /**
@@ -88,14 +103,15 @@ class Game {
     this.player1 = player1;
     this.player2 = player2;
     this.brains = 0;
-    this.blast = 0;
+    this.blasts = 0;
     this.score = [0, 0];
     this.currentPlayer = this.player1;
-    this.gameEnded = false;
+    this.dice = new ZombieDice();
   }
 
   /**
    * Switches the current player
+   * We'll need to change this for more players
    */
   switchPlayer() {
     if (this.currentPlayer === this.player1) {
@@ -107,7 +123,7 @@ class Game {
 
   /**
    * Checks if a player has 13 brains to win the game
-   * @returns {string} - winner of the game
+   * @returns {string} - winner of the game or empty string if no winner
    */
   checkWinner() {
     if (this.score[0] >= 13) {
@@ -115,30 +131,27 @@ class Game {
     } else if (this.score[1] >= 13) {
       return this.player2;
     } else {
-      return this.gameEnded;
+      return "";
     }
   }
 
   /**
-   * Ends the turn if the player rolls 3 shotguns or hits the bank
+   * Ends the current turn, adds brains (if blasts > 3, it will add 0),
+   * switches players, and creates new dice.
    */
   endTurn() {
-    if (this.blast === 3) {
-      // lose all brains and start new turn
-      this.brains = 0;
-      this.blasts = 0;
-      this.switchPlayer();
-      // get new dice
-      this.zombieDice = new ZombieDice();
+    // add brains to score and start new turn
+    if (this.currentPlayer === this.player1) {
+      this.score[0] += this.brains;
     } else {
-      // add brains to score and start new turn
-      this.score[this.currentPlayer] += this.brains;
-      this.brains = 0;
-      this.blast = 0;
-      this.switchPlayer();
-      // get new dice
-      this.zombieDice = new ZombieDice();
+      this.score[1] += this.brains;
     }
+    this.switchPlayer();
+    // get new dice
+    this.dice = new ZombieDice();
+    // reset brains and blasts
+    this.brains = 0;
+    this.blasts = 0;
   }
 
   /**
@@ -148,7 +161,7 @@ class Game {
     var report = "";
     report += "Current Player: " + this.currentPlayer + "\n";
     report += "Current Brains: " + this.brains + "\n";
-    report += "Current Shotguns: " + this.blast + "\n" + "\n";
+    report += "Current Blasts: " + this.blasts + "\n" + "\n";
 
     report += "Player 1 Score: " + this.score[0] + "\n";
     report += "Player 2 Score: " + this.score[1] + "\n";
@@ -156,7 +169,7 @@ class Game {
   }
 }
 
-var currentGame = new Game("Player 1", "Player 2");
+var game = new Game("Player 1", "Player 2");
 var player1Box = document.getElementById("player1");
 var player2Box = document.getElementById("player2");
 var scoreArea = document.getElementById("scoreArea");
@@ -166,41 +179,65 @@ rollButton.disabled = true;
 var bankButton = document.getElementById("bankButton");
 bankButton.disabled = true;
 
+// functionality for start button
 startButton.addEventListener("click", function () {
+  // grab player names from input boxes
+  // (we'll need to change this for more players)
   var player1 = player1Box.value;
   var player2 = player2Box.value;
-  currentGame = new Game(player1, player2);
-  scoreArea.innerText = currentGame.report();
+  game = new Game(player1, player2);
+  scoreArea.innerText = game.report();
   rollButton.disabled = false;
   bankButton.disabled = false;
 });
 
 rollButton.addEventListener("click", function () {
-  if (currentGame.gameEnded) {
-    rollButton.disabled = true;
-    bankButton.disabled = true;
-  } else if (currentGame.blasts >= 3) {
-    currentGame.endTurn();
-  } else {
-    // roll dice
-    var dice = currentGame.zombieDice.roll();
+  // grab 3 dice from zombieDice
+  game.dice.pickUp();
+  // make hand (list(hand) of lists(dice))
+  var hand = game.dice.hand;
 
-    // report dice
-    for (var i = 0; i < 3; i++) {
-      if (dice[i] === brain) {
-        currentGame.brains++;
-      } else if (dice[i] === blast) {
-        currentGame.blast++;
-      }
-      // tracks need to be rerolled
+  // report dice grabbed
+  var report = "";
+  for (var i = 0; i < hand.length; i++) {
+    // roll and grab color and face of current dice
+    var color = game.dice.getColor(hand[i]);
+    var face = game.dice.getFace(hand[i]);
+    report += "Dice " + (i + 1) + ": " + color + " " + face + "\n";
 
+    // add brain to brains and blast to blasts
+    if (face === 1) {
+      game.brains++;
+    } else if (face === 2) {
+      game.blasts++;
     }
 
-    scoreArea.innerText = currentGame.report();
+    // if blasts > 3, brains and blasts = 0 and end turn
+    if (game.blasts >= 3) {
+      game.brains = 0;
+      game.blasts = 0;
+      game.endTurn();
+    }
+
+    // check for winner
+    if (game.checkWinner() !== "") {
+      rollButton.disabled = true;
+      bankButton.disabled = true;
+      report += game.checkWinner() + " wins!";
+    }
   }
+  scoreArea.innerText = game.report() + "\n" + report;
 });
 
 bankButton.addEventListener("click", function () {
-  currentGame.endTurn();
-  scoreArea.innerText = currentGame.report();
+  // ends turn
+  game.endTurn();
+  // check for winner and report
+  var report = "";
+  if (game.checkWinner() !== "") {
+    rollButton.disabled = true;
+    bankButton.disabled = true;
+    report += game.checkWinner() + " wins!";
+  }
+  scoreArea.innerText = game.report() + "\n" + report;
 });
