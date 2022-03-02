@@ -5,9 +5,10 @@
 - We need to make some sort of design structure for how we want the game to look
   (we'll work on this together for some prototype)
 - We'll have to make some dice pngs for zombie dice - (brains, tracks, shotgun blast)
-- We have to keep track of the dice as well for red, yellow, and green risk dice
-- Obviously keep track of player and player status (turn, status, etc)
-- 3 dice are assigned randomly (randomly pulling out dice)
+- Obviously keep track of player and player status (turn, status, dice, etc)
+- We have to keep track of the dice: (6 green have 3 brains, 1 shotgun, and 2 runners)
+  (4 yellow have 2 of each) (3 red have 1 brain, 3 shotgun, and 2 runner)
+- 3 dice are assigned randomly out of 13 (randomly pulling out dice)
 - Shots and brains are automatically set aside for the turn
 - Allow players to reroll dice (always 3) until they bank brains or get shot 3 times
 - If a player is shot 3 times, they lose all brains accumulated that round

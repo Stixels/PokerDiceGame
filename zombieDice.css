@@ -31,6 +31,16 @@ body {
 .accordion:hover {
   background-color: var(--tertiary-color);
 }
+.accordion:after {
+  content: "\002B";
+  color: var(--primary-color);
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+.active:after {
+  content: "\2212";
+}
 .panel {
   padding: 0 1em;
   background-color: var(--tertiary-color);

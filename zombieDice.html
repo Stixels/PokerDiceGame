@@ -8,21 +8,53 @@
   </head>
   <body>
     <h1 class="center">Zombie Dice Game</h1>
-    <!-- Rules -->
-    <h2>Zombie Dice Game Rules</h2>
+
     <!-- How do you play Poker Dice - Accordion -->
-    <button class="accordion">How do you play Zombie Dice?</button>
+    <button class="accordion">What is Zombie Dice?</button>
     <div class="panel">
       <!-- Format rules here -->
-      <p></p>
+      <p>
+        In Zombie Dice, you are a zombie. You want braaains – more brains than
+        any of your zombie buddies. The 13 custom dice are your victims. Push
+        your luck to eat their brains, but stop rolling before the shotgun
+        blasts end your turn! Whoever collects 13 brains first wins. Each game
+        takes 10 to 20 minutes and can be taught in a single round.
+      </p>
     </div>
 
-    <!-- How do you score - Accordion -->
-    <button class="accordion">How do you score?</button>
+    <!-- Turn format - Accordion -->
+    <button class="accordion">How do you play?</button>
     <div class="panel">
       <!-- format objective here -->
-      <p></p>
+      <p>
+        Each turn, you take three dice from the box and roll them. A brain
+        symbol is worth one point at the end of the round, while footsteps allow
+        you to reroll this particular dice. Shotgun blasts on the other hand are
+        rather bad, cause if you collect three shotgun blasts during your turn,
+        it is over for you and you get no points. After rolling three dice, you
+        may decide if you want to score your current brain collection or if you
+        want to push your luck by grabbing new dice so you have three again and
+        roll once more.
+      </p>
     </div>
+
+    <!-- Game Area -->
+    <div>
+      <p>
+        <!-- textbox -->
+        <label for="player1">Player 1:</label>
+        <input type="text" id="player1" placeholder="Player 1 Name" />
+        <br />
+        <label for="player2">Player 2:</label>
+        <input type="text" id="player2" placeholder="Player 2 Name" />
+      </p>
+      <div id="scoreArea"></div>
+      <button id="startButton">Start Game</button>
+      <!-- Roll or Bank Buttons -->
+      <button id="rollButton">Roll</button>
+      <button id="bankButton">Bank</button>
+    </div>
+
     <script src="zombieDice.js"></script>
   </body>
 </html>
