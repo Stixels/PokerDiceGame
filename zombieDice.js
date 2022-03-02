@@ -14,6 +14,7 @@ for (var i = 0; i < acc.length; i++) {
     }
   });
 }
+/////////////////////////////////////////////////////////////////
 
 class ZombieDice {
   // constructor makes 13 dice for the game
@@ -74,6 +75,8 @@ class ZombieDice {
       return "tracks";
     }
   }
+
+  // rolling or picking up
 }
 
 /**
@@ -107,11 +110,9 @@ class Game {
    * @returns {string} - winner of the game
    */
   checkWinner() {
-    if (this.brains === 13) {
-      this.gameEnded = true;
+    if (this.score[0] >= 13) {
       return this.player1;
-    } else if (this.blast === 13) {
-      this.gameEnded = true;
+    } else if (this.score[1] >= 13) {
       return this.player2;
     } else {
       return this.gameEnded;
@@ -192,6 +193,7 @@ rollButton.addEventListener("click", function () {
         currentGame.blast++;
       }
       // tracks need to be rerolled
+
     }
 
     scoreArea.innerText = currentGame.report();
