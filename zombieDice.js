@@ -67,11 +67,11 @@ class ZombieDice {
       }
     }
     if (brain === 3) {
-      return "green";
+      return "Green";
     } else if (brain === 2) {
-      return "yellow";
+      return "Yellow";
     } else if (brain === 1) {
-      return "red";
+      return "Red";
     }
   }
 
@@ -79,7 +79,13 @@ class ZombieDice {
   getFace(dice) {
     // roll dice
     var face = dice[Math.floor(Math.random() * dice.length)];
-    return face;
+    if(face == 1){
+      return "Brain";
+    }
+    else if(face == 2){
+      return "Shotgun"
+    }
+    return "Tracks"
   }
 
   // picking up dice
@@ -91,6 +97,14 @@ class ZombieDice {
       // add dice to hand
       this.hand.push(dice);
     }
+  }
+  getDice(color, face){
+    var pic = document.createElement("img");
+    pic.src = "Die"+color+face+".png";
+    pic.alt = color+" "+face;
+    pic.height = 100;
+    pic.weight = 100;
+    return pic;
   }
 }
 
@@ -204,6 +218,7 @@ rollButton.addEventListener("click", function () {
     var color = game.dice.getColor(hand[i]);
     var face = game.dice.getFace(hand[i]);
     report += "Dice " + (i + 1) + ": " + color + " " + face + "\n";
+    document.body.appendChild(game.dice.getDice(color, face));
 
     // add brain to brains and blast to blasts
     if (face === 1) {
