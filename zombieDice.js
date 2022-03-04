@@ -1,5 +1,4 @@
-// All js for poker dice game
-
+//////////////////////////////////////////////////////////
 // JS for accordions
 var acc = document.getElementsByClassName("accordion");
 
@@ -14,8 +13,9 @@ for (var i = 0; i < acc.length; i++) {
     }
   });
 }
-/////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
 
+// All js for poker dice game
 class ZombieDice {
   constructor() {
     var brain = 1;
