@@ -98,6 +98,7 @@ class ZombieDice {
       this.hand.push(dice);
     }
   }
+  // selects the picture for the dice
   getDice(color, face){
     var pic = document.createElement("img");
     pic.src = "Die"+color+face+".png";
@@ -217,13 +218,15 @@ rollButton.addEventListener("click", function () {
     // roll and grab color and face of current dice
     var color = game.dice.getColor(hand[i]);
     var face = game.dice.getFace(hand[i]);
+    //var text = createTextNode("Dice " + (i + 1) + ": "+game.dice.getDice(color, face));
+    //report.appendChild(text)
     report += "Dice " + (i + 1) + ": " + color + " " + face + "\n";
     document.body.appendChild(game.dice.getDice(color, face));
 
     // add brain to brains and blast to blasts
-    if (face === 1) {
+    if (face === "Brain") {
       game.brains++;
-    } else if (face === 2) {
+    } else if (face === "Shotgun") {
       game.shotguns++;
     }
 
