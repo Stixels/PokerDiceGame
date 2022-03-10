@@ -15,6 +15,7 @@
 - Better UI to show what dice is on board, in hand, and in the bank
 - Better UI in general let's be honest
 - Fix rerolling tracks (it just picks up 3 dice right now)
+- Fix dice print to repace the words, and not keep the old dice when rerolling 
 
 # Zombie Dice Game Rules
 
