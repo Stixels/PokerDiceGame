@@ -15,7 +15,7 @@ for (var i = 0; i < acc.length; i++) {
 }
 //////////////////////////////////////////////////////////
 
-// All js for poker dice game
+// All js for Zombie dice game
 class ZombieDice {
   constructor() {
     var brain = 1;
@@ -26,6 +26,8 @@ class ZombieDice {
     var red = [brain, blast, blast, blast, tracks, tracks];
     this.dice = [];
     this.hand = [];
+
+
 
     // constructor makes 13 dice for the game
     // 6 dice have green risk (3 brain sides, 1 blast side, 2 tracks sides)
@@ -107,6 +109,7 @@ class ZombieDice {
     pic.weight = 100;
     return pic;
   }
+
 }
 
 /**
@@ -122,13 +125,22 @@ class Game {
     this.score = [0, 0];
     this.currentPlayer = this.player1;
     this.dice = new ZombieDice();
+    this.blastArray = [];
   }
-
+  getBlast(color, face){
+    var pic = document.createElement("img");
+    pic.src = "Die"+color+face+".png";
+    pic.alt = color+" "+face;
+    pic.height = 100;
+    pic.weight = 100;
+    this.blastArray.push(pic);
+  }
   /**
    * Switches the current player
    * We'll need to change this for more players
    */
   switchPlayer() {
+    this.blastArray = [];
     if (this.currentPlayer === this.player1) {
       this.currentPlayer = this.player2;
     } else {
@@ -174,12 +186,12 @@ class Game {
    */
   report() {
     var report = "";
+    report += "Player 1 Score: " + this.score[0] + "\n";
+    report += "Player 2 Score: " + this.score[1] + "\n"+"\n";
+
     report += "Current Player: " + this.currentPlayer + "\n";
     report += "Current Brains: " + this.brains + "\n";
-    report += "Current Blasts: " + this.shotguns + "\n" + "\n";
-
-    report += "Player 1 Score: " + this.score[0] + "\n";
-    report += "Player 2 Score: " + this.score[1] + "\n";
+    report += "Current Blasts: " + this.shotguns + "\n";
     return report;
   }
 }
@@ -213,15 +225,15 @@ rollButton.addEventListener("click", function () {
   var hand = game.dice.hand;
 
   // report dice grabbed
-  var report = "";
+  var report = document.createElement("span");
   for (var i = 0; i < hand.length; i++) {
     // roll and grab color and face of current dice
     var color = game.dice.getColor(hand[i]);
     var face = game.dice.getFace(hand[i]);
-    //var text = createTextNode("Dice " + (i + 1) + ": "+game.dice.getDice(color, face));
-    //report.appendChild(text)
-    report += "Dice " + (i + 1) + ": " + color + " " + face + "\n";
-    document.body.appendChild(game.dice.getDice(color, face));
+    if(face=="Shotgun"){
+      game.getBlast(color, face)
+    }
+    report.appendChild(game.dice.getDice(color, face));
 
     // add brain to brains and blast to blasts
     if (face === "Brain") {
@@ -244,7 +256,18 @@ rollButton.addEventListener("click", function () {
       report += game.checkWinner() + " wins!";
     }
   }
-  scoreArea.innerText = game.report() + "\n" + report;
+  var newLine = document.createElement("br");
+  var reportBlast = document.createElement("span");
+  for(var i = 0; i < game.blastArray.length;i++){
+    reportBlast.appendChild(game.blastArray[i])
+  }
+  scoreArea.innerText = game.report();
+  scoreArea.appendChild(reportBlast);
+  scoreArea.appendChild(newLine);
+  var scoreText = document.createTextNode("Current Roll:")
+  scoreArea.appendChild(scoreText);
+  scoreArea.appendChild(newLine);
+  scoreArea.appendChild(report);
 });
 
 bankButton.addEventListener("click", function () {
