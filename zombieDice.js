@@ -24,7 +24,7 @@ class ZombieDice {
     this.green = [brain, brain, brain, blast, tracks, tracks];
     this.yellow = [brain, brain, blast, blast, tracks, tracks];
     this.red = [brain, blast, blast, blast, tracks, tracks];
-    this.dice = [];
+    this.tableDice = [];
     this.hand = [];
     this.currentRoll = [];
 
@@ -33,25 +33,25 @@ class ZombieDice {
     // 4 dice have yellow risk (2 brain, 2 blast, 2 tracks)
     // 3 dice have red risk (1 brain, 3 blast, 2 tracks)
     for (var i = 0; i < 6; i++) {
-      this.dice.push(this.green);
+      this.tableDice.push(this.green);
     }
     for (var i = 0; i < 4; i++) {
-      this.dice.push(this.yellow);
+      this.tableDice.push(this.yellow);
     }
     for (var i = 0; i < 3; i++) {
-      this.dice.push(this.red);
+      this.tableDice.push(this.red);
     }
 
     ///////////////////////////////////////////////////
     // shuffle zombieDice
-    let currentIndex = this.dice.length,
+    let currentIndex = this.tableDice.length,
       randomIndex;
     while (0 !== currentIndex) {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
-      let temporaryValue = this.dice[currentIndex];
-      this.dice[currentIndex] = this.dice[randomIndex];
-      this.dice[randomIndex] = temporaryValue;
+      let temporaryValue = this.tableDice[currentIndex];
+      this.tableDice[currentIndex] = this.tableDice[randomIndex];
+      this.tableDice[randomIndex] = temporaryValue;
     }
     ///////////////////////////////////////////////////
   }
@@ -80,43 +80,42 @@ class ZombieDice {
   getFace(dice) {
     // roll dice
     var face = dice[Math.floor(Math.random() * dice.length)];
-    if(face == 1){
+    if (face == 1) {
       return "Brain";
+    } else if (face == 2) {
+      return "Shotgun";
     }
-    else if(face == 2){
-      return "Shotgun"
-    }
-    return "Tracks"
+    return "Tracks";
   }
 
   // picking up dice
   pickUp() {
     // adds the color of the dice that were rolled previously to hand
-    if(this.currentRoll.length < 3 && this.currentRoll.length >= 1){
-      for(var i = 0; i < this.currentRoll.length; i++){
-        if(this.currentRoll[i]=="Green"){
+    if (this.currentRoll.length < 3 && this.currentRoll.length > 0) {
+      for (var i = 0; i < this.currentRoll.length; i++) {
+        if (this.currentRoll[i] == "Green") {
           this.hand.push(this.green);
-        }else if (this.currentRoll[i]=="Yellow") {
+        } else if (this.currentRoll[i] == "Yellow") {
           this.hand.push(this.yellow);
-        }else if (this.currentRoll[i]=="Red") {
+        } else if (this.currentRoll[i] == "Red") {
           this.hand.push(this.red);
         }
       }
     }
     // pick up until there are 3 dice in hand
     while (this.hand.length < 3) {
-      // pickup dice from zombieDice
-      var dice = this.dice.pop();
+      // pickup dice from zombieDices
+      var dice = this.tableDice.pop();
       // add dice to hand
       this.hand.push(dice);
     }
-    this.currentRole = [];
+    this.currentRoll = [];
   }
   // selects the picture for the dice
-  getDice(color, face){
+  getDice(color, face) {
     var pic = document.createElement("img");
-    pic.src = "Die"+color+face+".png";
-    pic.alt = color+" "+face;
+    pic.src = "images/Die" + color + face + ".png";
+    pic.alt = color + " " + face;
     pic.height = 100;
     pic.weight = 100;
     return pic;
@@ -136,23 +135,43 @@ class Game {
     this.score = [0, 0];
     this.currentPlayer = this.player1;
     this.dice = new ZombieDice();
-    this.blastArray = [];
+    this.currentBlast = [];
+    this.currentBrain = [];
+    this.diceDisplay = [];
   }
   // saves the blasts that have been rolled
-  getBlast(color, face){
+  getBlast(color, face) {
     var pic = document.createElement("img");
-    pic.src = "Die"+color+face+".png";
-    pic.alt = color+" "+face;
-    pic.height = 100;
-    pic.weight = 100;
-    this.blastArray.push(pic);
+    pic.src = "images/Die" + color + face + ".png";
+    pic.alt = color + " " + face;
+    pic.height = 50;
+    pic.weight = 50;
+    this.currentBlast.push(pic);
+  }
+  // saves the dice still in the cup
+  displayTableDice(color) {
+    var pic = document.createElement("img");
+    pic.src = "images/Die" + color + "Tracks.png";
+    pic.alt = color + " Tracks";
+    pic.height = 50;
+    pic.weight = 50;
+    this.diceDisplay.push(pic);
+  }
+  // saves the rolled brains
+  getBrain(color) {
+    var pic = document.createElement("img");
+    pic.src = "images/Die" + color + "Brain.png";
+    pic.alt = color + " Brains";
+    pic.height = 50;
+    pic.weight = 50;
+    this.diceDisplay.push(pic);
   }
   /**
    * Switches the current player
    * We'll need to change this for more players
    */
   switchPlayer() {
-    this.blastArray = [];
+    this.currentBlast = [];
     if (this.currentPlayer === this.player1) {
       this.currentPlayer = this.player2;
     } else {
@@ -199,7 +218,7 @@ class Game {
   report() {
     var report = "";
     report += "Player 1 Score: " + this.score[0] + "\n";
-    report += "Player 2 Score: " + this.score[1] + "\n"+"\n";
+    report += "Player 2 Score: " + this.score[1] + "\n" + "\n";
 
     report += "Current Player: " + this.currentPlayer + "\n";
     report += "Current Brains: " + this.brains + "\n";
@@ -242,11 +261,14 @@ rollButton.addEventListener("click", function () {
     // roll and grab color and face of current dice
     var color = game.dice.getColor(hand[i]);
     var face = game.dice.getFace(hand[i]);
-    if(face == "Shotgun"){
-      game.getBlast(color, face)
+    if (face == "Shotgun") {
+      game.getBlast(color, face);
     }
-    if(face != "Tracks"){
+    if (face == "Tracks") {
       game.dice.currentRoll.push(color);
+    }
+    if (face == "Brain") {
+      game.getBrain(color);
     }
     report.appendChild(game.dice.getDice(color, face));
 
@@ -271,18 +293,30 @@ rollButton.addEventListener("click", function () {
       report += game.checkWinner() + " wins!";
     }
   }
-  var newLine = document.createElement("br");
+  var brainDis = document.getElementById("brainTable");
+  var handDis = document.getElementById("handTable");
+  var blastDis = document.getElementById("blastTable");
+  var diceDis = document.getElementById("rollTable");
   var reportBlast = document.createElement("span");
-  for(var i = 0; i < game.blastArray.length;i++){
-    reportBlast.appendChild(game.blastArray[i])
+  for (var i = 0; i < game.currentBlast.length; i++) {
+    reportBlast.appendChild(game.currentBlast[i]);
   }
+  blastDis.appendChild(reportBlast);
   scoreArea.innerText = game.report();
-  scoreArea.appendChild(reportBlast);
-  scoreArea.appendChild(newLine);
-  var scoreText = document.createTextNode("Current Roll:")
-  scoreArea.appendChild(scoreText);
-  scoreArea.appendChild(newLine);
-  scoreArea.appendChild(report);
+  // Displays the current rolled dice
+  handDis.appendChild(report);
+  // Displays dice in the cup
+  for (var i = 0; i < game.dice.tableDice.length; i++) {
+    colorDis = game.dice.getColor(game.dice.tableDice[i]);
+    game.displayTableDice(colorDis);
+  }
+  for (var i = 0; i < game.diceDisplay.length; i++) {
+    diceDis.appendChild(game.diceDisplay[i]);
+  }
+  // Displays the current brains
+  for (var i = 0; i < game.currentBrain.length; i++) {
+    brainDis.appendChild(game.currentBrain[i]);
+  }
 });
 
 bankButton.addEventListener("click", function () {
