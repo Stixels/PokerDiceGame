@@ -21,26 +21,25 @@ class ZombieDice {
     var brain = 1;
     var blast = 2;
     var tracks = 3;
-    var green = [brain, brain, brain, blast, tracks, tracks];
-    var yellow = [brain, brain, blast, blast, tracks, tracks];
-    var red = [brain, blast, blast, blast, tracks, tracks];
+    this.green = [brain, brain, brain, blast, tracks, tracks];
+    this.yellow = [brain, brain, blast, blast, tracks, tracks];
+    this.red = [brain, blast, blast, blast, tracks, tracks];
     this.dice = [];
     this.hand = [];
-
-
+    this.currentRoll = [];
 
     // constructor makes 13 dice for the game
     // 6 dice have green risk (3 brain sides, 1 blast side, 2 tracks sides)
     // 4 dice have yellow risk (2 brain, 2 blast, 2 tracks)
     // 3 dice have red risk (1 brain, 3 blast, 2 tracks)
     for (var i = 0; i < 6; i++) {
-      this.dice.push(green);
+      this.dice.push(this.green);
     }
     for (var i = 0; i < 4; i++) {
-      this.dice.push(yellow);
+      this.dice.push(this.yellow);
     }
     for (var i = 0; i < 3; i++) {
-      this.dice.push(red);
+      this.dice.push(this.red);
     }
 
     ///////////////////////////////////////////////////
@@ -92,6 +91,18 @@ class ZombieDice {
 
   // picking up dice
   pickUp() {
+    // adds the color of the dice that were rolled previously to hand
+    if(this.currentRoll.length < 3 && this.currentRoll.length >= 1){
+      for(var i = 0; i < this.currentRoll.length; i++){
+        if(this.currentRoll[i]=="Green"){
+          this.hand.push(this.green);
+        }else if (this.currentRoll[i]=="Yellow") {
+          this.hand.push(this.yellow);
+        }else if (this.currentRoll[i]=="Red") {
+          this.hand.push(this.red);
+        }
+      }
+    }
     // pick up until there are 3 dice in hand
     while (this.hand.length < 3) {
       // pickup dice from zombieDice
@@ -99,6 +110,7 @@ class ZombieDice {
       // add dice to hand
       this.hand.push(dice);
     }
+    this.currentRole = [];
   }
   // selects the picture for the dice
   getDice(color, face){
@@ -109,7 +121,6 @@ class ZombieDice {
     pic.weight = 100;
     return pic;
   }
-
 }
 
 /**
@@ -127,6 +138,7 @@ class Game {
     this.dice = new ZombieDice();
     this.blastArray = [];
   }
+  // saves the blasts that have been rolled
   getBlast(color, face){
     var pic = document.createElement("img");
     pic.src = "Die"+color+face+".png";
@@ -230,8 +242,11 @@ rollButton.addEventListener("click", function () {
     // roll and grab color and face of current dice
     var color = game.dice.getColor(hand[i]);
     var face = game.dice.getFace(hand[i]);
-    if(face=="Shotgun"){
+    if(face == "Shotgun"){
       game.getBlast(color, face)
+    }
+    if(face != "Tracks"){
+      game.dice.currentRoll.push(color);
     }
     report.appendChild(game.dice.getDice(color, face));
 
