@@ -90,8 +90,16 @@ class ZombieDice {
 
   // picking up dice
   pickUp() {
+    this.hand = [];
+    // if blasts > 3, brains and blasts = 0 and end turn
+    if (game.shotguns >= 3) {
+      game.dice.hand = [];
+      game.brains = 0;
+      game.shotguns = 0;S
+      game.endTurn();
+    }
     // adds the color of the dice that were rolled previously to hand
-    if (this.currentRoll.length < 3 && this.currentRoll.length > 0) {
+    if (this.currentRoll.length > 0) {
       for (var i = 0; i < this.currentRoll.length; i++) {
         if (this.currentRoll[i] == "Green") {
           this.hand.push(this.green);
@@ -164,7 +172,7 @@ class Game {
     pic.alt = color + " Brains";
     pic.height = 50;
     pic.weight = 50;
-    this.diceDisplay.push(pic);
+    this.currentBrain.push(pic);
   }
   /**
    * Switches the current player
@@ -172,6 +180,7 @@ class Game {
    */
   switchPlayer() {
     this.currentBlast = [];
+    this.currentBrain = [];
     if (this.currentPlayer === this.player1) {
       this.currentPlayer = this.player2;
     } else {
@@ -255,6 +264,7 @@ rollButton.addEventListener("click", function () {
   // make hand (list(hand) of lists(dice))
   var hand = game.dice.hand;
 
+  game.diceDisplay = [];
   // report dice grabbed
   var report = document.createElement("span");
   for (var i = 0; i < hand.length; i++) {
@@ -279,12 +289,7 @@ rollButton.addEventListener("click", function () {
       game.shotguns++;
     }
 
-    // if blasts > 3, brains and blasts = 0 and end turn
-    if (game.shotguns >= 3) {
-      game.brains = 0;
-      game.shotguns = 0;
-      game.endTurn();
-    }
+    
 
     // check for winner
     if (game.checkWinner() !== "") {
@@ -298,6 +303,21 @@ rollButton.addEventListener("click", function () {
   var blastDis = document.getElementById("blastTable");
   var diceDis = document.getElementById("rollTable");
   var reportBlast = document.createElement("span");
+  // clears the divs
+  brainDis.replaceChildren();
+  handDis.replaceChildren();
+  blastDis.replaceChildren();
+  diceDis.replaceChildren();
+  //adds text for the divs
+  var text1 = document.createTextNode("Dice in the Cup:"+"\n")
+  var text2 = document.createTextNode("Current Roll:")
+  var text3 = document.createTextNode("Brains:");
+  var text4 = document.createTextNode("Blasts:")
+  diceDis.appendChild(text1);
+  handDis.appendChild(text2);
+  brainDis.appendChild(text3);
+  blastDis.appendChild(text4);
+  // Displays the rolled blasts
   for (var i = 0; i < game.currentBlast.length; i++) {
     reportBlast.appendChild(game.currentBlast[i]);
   }
