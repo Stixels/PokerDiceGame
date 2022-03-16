@@ -96,7 +96,6 @@ class ZombieDice {
       game.dice.hand = [];
       game.brains = 0;
       game.shotguns = 0;
-      S;
       game.endTurn();
     }
     // adds the color of the dice that were rolled previously to hand
@@ -208,12 +207,19 @@ class Game {
    * switches players, and creates new dice.
    */
   endTurn() {
-    // add brains to score and start new turn
-    if (this.currentPlayer === this.player1) {
-      this.score[0] += this.brains;
+    // if blasts > 3, brains and blasts = 0 and end turn
+    if (this.shotguns >= 3) {
+      this.dice.hand = [];
+      this.brains = 0;
+      this.shotguns = 0;
     } else {
-      this.score[1] += this.brains;
+      if (this.currentPlayer === this.player1) {
+        this.score[0] += this.brains;
+      } else {
+        this.score[1] += this.brains;
+      }
     }
+    // add brains to score and start new turn
     this.switchPlayer();
     // get new dice
     this.dice = new ZombieDice();
@@ -290,6 +296,11 @@ rollButton.addEventListener("click", function () {
       game.shotguns++;
     }
 
+    // disable roll after shotgun >= 3
+    if (game.shotguns >= 3) {
+      rollButton.disabled = true;
+    }
+
     // check for winner
     if (game.checkWinner() !== "") {
       rollButton.disabled = true;
@@ -344,6 +355,8 @@ rollButton.addEventListener("click", function () {
 });
 
 endTurnButton.addEventListener("click", function () {
+  // enable roll button
+  rollButton.disabled = false;
   // ends turn
   game.endTurn();
   // check for winner and report
