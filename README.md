@@ -15,6 +15,7 @@
 - Better UI in general let's be honest
 - ~~Fix rerolling tracks (it just picks up 3 dice right now)~~
 - Fix run out of dice (if you run out of dice, refresh dice)
+- Fix banking with 3 or more blasts
 - Allow for more players
 
 # Zombie Dice Game Rules
