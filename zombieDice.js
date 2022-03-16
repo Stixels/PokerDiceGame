@@ -208,11 +208,7 @@ class Game {
    */
   endTurn() {
     // if blasts > 3, brains and blasts = 0 and end turn
-    if (this.shotguns >= 3) {
-      this.dice.hand = [];
-      this.brains = 0;
-      this.shotguns = 0;
-    } else {
+    if (this.shotguns < 3) {
       if (this.currentPlayer === this.player1) {
         this.score[0] += this.brains;
       } else {
@@ -234,16 +230,17 @@ class Game {
   report() {
     var report = "";
     report += "Player 1 Score: " + this.score[0] + "\n";
-    report += "Player 2 Score: " + this.score[1] + "\n" + "\n";
-
-    report += "Current Player: " + this.currentPlayer + "\n";
-    report += "Current Brains: " + this.brains + "\n";
-    report += "Current Blasts: " + this.shotguns;
+    report += "Player 2 Score: " + this.score[1] + "\n";
+    report += "Current Player: " + this.currentPlayer;
     return report;
   }
 }
 
-var game = new Game("Player 1", "Player 2");
+// new line
+var br = document.createElement("br");
+
+var game;
+
 var player1Box = document.getElementById("player1");
 var player2Box = document.getElementById("player2");
 var scoreArea = document.getElementById("scoreArea");
@@ -259,10 +256,21 @@ startButton.addEventListener("click", function () {
   // (we'll need to change this for more players)
   var player1 = player1Box.value;
   var player2 = player2Box.value;
-  game = new Game(player1, player2);
-  scoreArea.innerText = game.report();
-  rollButton.disabled = false;
-  endTurnButton.disabled = false;
+  if (!player1 || !player2) {
+    // formal code
+    //alert("Please enter a name for both players");
+    // quick debug code
+    game = new Game("Player 1", "Player 2");
+    scoreArea.innerText = game.report();
+    rollButton.disabled = false;
+    endTurnButton.disabled = false;
+  } else {
+    // create new game
+    game = new Game(player1, player2);
+    scoreArea.innerText = game.report();
+    rollButton.disabled = false;
+    endTurnButton.disabled = false;
+  }
 });
 
 rollButton.addEventListener("click", function () {
@@ -308,30 +316,34 @@ rollButton.addEventListener("click", function () {
       report += game.checkWinner() + " wins!";
     }
   }
+
   var brainDis = document.getElementById("brainTable");
   var handDis = document.getElementById("handTable");
   var blastDis = document.getElementById("blastTable");
   var diceDis = document.getElementById("rollTable");
+  var tableDiceDisplay = document.getElementById("tableDiceDisplay");
   var reportBlast = document.createElement("div");
+
   // clears the divs
   brainDis.replaceChildren();
   handDis.replaceChildren();
   blastDis.replaceChildren();
   diceDis.replaceChildren();
-  // new line
-  var br = document.createElement("br");
-  var tabeDiceDisplay = document.createElement("div");
+  tableDiceDisplay.replaceChildren();
+
   //adds text for the divs
   var text1 = document.createTextNode("Dice in the Cup:");
   var text2 = document.createTextNode("Current Roll:");
   var text3 = document.createTextNode("Brains:");
   var text4 = document.createTextNode("Blasts:");
+
   diceDis.appendChild(text1);
-  diceDis.appendChild(tabeDiceDisplay);
+  diceDis.appendChild(tableDiceDisplay);
   handDis.appendChild(text2);
   brainDis.appendChild(text3);
   brainDis.appendChild(br);
   blastDis.appendChild(text4);
+
   // Displays the rolled blasts
   for (var i = 0; i < game.currentBlast.length; i++) {
     reportBlast.appendChild(game.currentBlast[i]);
@@ -346,7 +358,7 @@ rollButton.addEventListener("click", function () {
     game.displayTableDice(colorDis);
   }
   for (var i = 0; i < game.diceDisplay.length; i++) {
-    tabeDiceDisplay.appendChild(game.diceDisplay[i]);
+    tableDiceDisplay.appendChild(game.diceDisplay[i]);
   }
   // Displays the current brains
   for (var i = 0; i < game.currentBrain.length; i++) {

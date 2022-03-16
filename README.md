@@ -15,8 +15,17 @@
 - Better UI in general let's be honest
 - ~~Fix rerolling tracks (it just picks up 3 dice right now)~~
 - ~~Fix banking with 3 or more blasts~~
+- Fix end turn display (full tableDice and empty the rest)
 - Fix run out of dice (if you run out of dice, refresh dice)
 - Allow for more players
+
+## Optional
+
+- Clean up code
+  - Change DOMs to Static HTML when possible
+  - Remove unnecessary variables
+  - Add or remove functions as needed
+- Add effects (this one is more of a dream)
 
 # Zombie Dice Game Rules
 
