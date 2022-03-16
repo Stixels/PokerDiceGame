@@ -118,7 +118,9 @@ class ZombieDice {
       this.hand.push(dice);
     }
     this.currentRoll = [];
+    if(this.tableDice.length < 3){game.refill()}
   }
+  
   // selects the picture for the dice
   getDice(color, face) {
     var pic = document.createElement("img");
@@ -223,6 +225,10 @@ class Game {
     this.brains = 0;
     this.shotguns = 0;
   }
+  // refills the dice when empty
+  refill(){
+    game.dice = new ZombieDice();
+  }
 
   /**
    * Reports the current player's turn and players scores
@@ -286,22 +292,18 @@ rollButton.addEventListener("click", function () {
     // roll and grab color and face of current dice
     var color = game.dice.getColor(hand[i]);
     var face = game.dice.getFace(hand[i]);
-    if (face == "Shotgun") {
-      game.getBlast(color, face);
-    }
     if (face == "Tracks") {
       game.dice.currentRoll.push(color);
-    }
-    if (face == "Brain") {
-      game.getBrain(color);
     }
     report.appendChild(game.dice.getDice(color, face));
 
     // add brain to brains and blast to blasts
     if (face === "Brain") {
       game.brains++;
+      game.getBrain(color);
     } else if (face === "Shotgun") {
       game.shotguns++;
+      game.getBlast(color, face);
     }
 
     // disable roll after shotgun >= 3
