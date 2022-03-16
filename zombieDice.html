@@ -7,7 +7,7 @@
     <title>Zombie Dice</title>
   </head>
   <body>
-    <h1 class="center">Zombie Dice Game</h1>
+    <h1 class="center" style="font-size: x-large">Zombie Dice Game</h1>
 
     <!-- How do you play Poker Dice - Accordion -->
     <button class="accordion">What is Zombie Dice?</button>
@@ -54,26 +54,26 @@
     </div>
 
     <!-- Game Area -->
-    <div>
-      <p>
-        <!-- textbox -->
-        <label for="player1">Player 1:</label>
-        <input type="text" id="player1" placeholder="Player 1 Name" />
-        <br />
-        <label for="player2">Player 2:</label>
-        <input type="text" id="player2" placeholder="Player 2 Name" />
-      </p>
+    <div class="center">
+      <br />
+      <!-- textbox -->
+      <label for="player1">Player 1:</label>
+      <input type="text" id="player1" placeholder="Player 1 Name" />
+      <br />
+      <label for="player2">Player 2:</label>
+      <input type="text" id="player2" placeholder="Player 2 Name" />
+
       <div id="scoreArea"></div>
       <button id="startButton">Start Game</button>
       <!-- Roll or Bank Buttons -->
       <button id="rollButton">Roll</button>
-      <button id="bankButton">Bank</button>
+      <button id="endTurnButton">End Turn</button>
     </div>
-    <div id="disTable">
-      <div id ="rollTable"></div>
-      <div id="handTable"></div>
-      <div id="brainTable"></div>
-      <div id="blastTable"></div>
+    <div class="column" id="rollTable"></div>
+    <div class="columns" id="disTable">
+      <div class="column" id="brainTable"></div>
+      <div class="column" id="handTable"></div>
+      <div class="column" id="blastTable"></div>
     </div>
     <script src="zombieDice.js"></script>
   </body>

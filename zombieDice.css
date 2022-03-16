@@ -19,7 +19,7 @@ body {
   background-color: var(--secondary-color);
   color: var(--primary-color);
   cursor: pointer;
-  padding: 1.1em;
+  padding: 0.5em;
   width: 100%;
   text-align: left;
   font-size: 1.5em;
@@ -48,4 +48,25 @@ body {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
+}
+
+#scoreArea {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1em;
+}
+
+.columns {
+  /* css to split into 3 columns */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.column {
+  flex: 1;
+  padding: 1em;
+  text-align: center;
 }

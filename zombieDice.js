@@ -95,7 +95,8 @@ class ZombieDice {
     if (game.shotguns >= 3) {
       game.dice.hand = [];
       game.brains = 0;
-      game.shotguns = 0;S
+      game.shotguns = 0;
+      S;
       game.endTurn();
     }
     // adds the color of the dice that were rolled previously to hand
@@ -124,8 +125,8 @@ class ZombieDice {
     var pic = document.createElement("img");
     pic.src = "images/Die" + color + face + ".png";
     pic.alt = color + " " + face;
-    pic.height = 100;
-    pic.weight = 100;
+    pic.height = 50;
+    pic.weight = 50;
     return pic;
   }
 }
@@ -243,8 +244,8 @@ var scoreArea = document.getElementById("scoreArea");
 var startButton = document.getElementById("startButton");
 var rollButton = document.getElementById("rollButton");
 rollButton.disabled = true;
-var bankButton = document.getElementById("bankButton");
-bankButton.disabled = true;
+var endTurnButton = document.getElementById("endTurnButton");
+endTurnButton.disabled = true;
 
 // functionality for start button
 startButton.addEventListener("click", function () {
@@ -255,7 +256,7 @@ startButton.addEventListener("click", function () {
   game = new Game(player1, player2);
   scoreArea.innerText = game.report();
   rollButton.disabled = false;
-  bankButton.disabled = false;
+  endTurnButton.disabled = false;
 });
 
 rollButton.addEventListener("click", function () {
@@ -266,7 +267,7 @@ rollButton.addEventListener("click", function () {
 
   game.diceDisplay = [];
   // report dice grabbed
-  var report = document.createElement("span");
+  var report = document.createElement("div");
   for (var i = 0; i < hand.length; i++) {
     // roll and grab color and face of current dice
     var color = game.dice.getColor(hand[i]);
@@ -289,12 +290,10 @@ rollButton.addEventListener("click", function () {
       game.shotguns++;
     }
 
-    
-
     // check for winner
     if (game.checkWinner() !== "") {
       rollButton.disabled = true;
-      bankButton.disabled = true;
+      endTurnButton.disabled = true;
       report += game.checkWinner() + " wins!";
     }
   }
@@ -302,20 +301,25 @@ rollButton.addEventListener("click", function () {
   var handDis = document.getElementById("handTable");
   var blastDis = document.getElementById("blastTable");
   var diceDis = document.getElementById("rollTable");
-  var reportBlast = document.createElement("span");
+  var reportBlast = document.createElement("div");
   // clears the divs
   brainDis.replaceChildren();
   handDis.replaceChildren();
   blastDis.replaceChildren();
   diceDis.replaceChildren();
+  // new line
+  var br = document.createElement("br");
+  var tabeDiceDisplay = document.createElement("div");
   //adds text for the divs
-  var text1 = document.createTextNode("Dice in the Cup:"+"\n")
-  var text2 = document.createTextNode("Current Roll:")
+  var text1 = document.createTextNode("Dice in the Cup:");
+  var text2 = document.createTextNode("Current Roll:");
   var text3 = document.createTextNode("Brains:");
-  var text4 = document.createTextNode("Blasts:")
+  var text4 = document.createTextNode("Blasts:");
   diceDis.appendChild(text1);
+  diceDis.appendChild(tabeDiceDisplay);
   handDis.appendChild(text2);
   brainDis.appendChild(text3);
+  brainDis.appendChild(br);
   blastDis.appendChild(text4);
   // Displays the rolled blasts
   for (var i = 0; i < game.currentBlast.length; i++) {
@@ -331,7 +335,7 @@ rollButton.addEventListener("click", function () {
     game.displayTableDice(colorDis);
   }
   for (var i = 0; i < game.diceDisplay.length; i++) {
-    diceDis.appendChild(game.diceDisplay[i]);
+    tabeDiceDisplay.appendChild(game.diceDisplay[i]);
   }
   // Displays the current brains
   for (var i = 0; i < game.currentBrain.length; i++) {
@@ -339,14 +343,14 @@ rollButton.addEventListener("click", function () {
   }
 });
 
-bankButton.addEventListener("click", function () {
+endTurnButton.addEventListener("click", function () {
   // ends turn
   game.endTurn();
   // check for winner and report
   var report = "";
   if (game.checkWinner() !== "") {
     rollButton.disabled = true;
-    bankButton.disabled = true;
+    endTurnButton.disabled = true;
     report += game.checkWinner() + " wins!";
   }
   scoreArea.innerText = game.report() + "\n" + report;
