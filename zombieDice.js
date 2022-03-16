@@ -238,7 +238,7 @@ class Game {
 
     report += "Current Player: " + this.currentPlayer + "\n";
     report += "Current Brains: " + this.brains + "\n";
-    report += "Current Blasts: " + this.shotguns + "\n";
+    report += "Current Blasts: " + this.shotguns;
     return report;
   }
 }
