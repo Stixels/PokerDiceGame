@@ -41,14 +41,19 @@
     <button class="accordion">Notes</button>
     <div class="panel">
       <!-- format notes here -->
-      <ul>
-        <li>
-          There are 3 types of dice with different risks: green, yellow, red.
+      Notes on Dice:
+      <ul> 
+        <li>There are 3 types of dice with different risks: green, yellow, red.
           The green dice have 3 brains, 2 tracks, and 1 shotgun. The yellow dice
-          have 2 of each. The red dice have 1 brain, 3 shotguns, and two tracks.
-        </li>
+          have 2 of each. The red dice have 1 brain, 3 shotguns, and two tracks.</li>
         <li>There are 6 green, 4 yellow, and 3 red dice.</li>
-        <li>If you choose to roll, you must roll 3 Dice</li>
+        <li>If you choose to roll, you must roll 3 Dice</li>        
+      </ul>
+      Notes on UI:
+      <ul>
+        <li>The "Dice in the Cup:" will show what dice are left to pick up from (You pick from the right side of the list)</li>
+        <li>When you "Roll", the dice you roll will display in "Current Roll"</li>
+        <li>When you want to bank or have 3 or more blasts, you need to press the "End Turn" button</li>
       </ul>
     </div>
 
@@ -75,12 +80,21 @@
       <button id="endTurnButton">End Turn</button>
     </div>
     <br />
+    <div class="center"><h3>Dice in the Cup:</h3>
     <div class="center" id="rollTable"></div>
     <div class="center" id="tableDiceDisplay"></div>
+    </div>
+
     <div class="columns" id="disTable">
-      <div class="column" id="brainTable"></div>
-      <div class="column" id="handTable"></div>
-      <div class="column" id="blastTable"></div>
+      <div class="column"><h3>Current Brains:</h3>
+      <div id="brainTable"></div>
+      </div>
+      <div class="column"><h3>Current Roll:</h3>
+      <div id="handTable"></div>
+      </div>
+      <div class="column"><h3>Current Blasts:</h3>
+      <div id="blastTable"></div>
+      </div>
     </div>
     <script src="zombieDice.js"></script>
   </body>

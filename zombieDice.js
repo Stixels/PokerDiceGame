@@ -118,9 +118,11 @@ class ZombieDice {
       this.hand.push(dice);
     }
     this.currentRoll = [];
-    if(this.tableDice.length < 3){game.refill()}
+    if (this.tableDice.length < 3) {
+      game.refill();
+    }
   }
-  
+
   // selects the picture for the dice
   getDice(color, face) {
     var pic = document.createElement("img");
@@ -226,7 +228,7 @@ class Game {
     this.shotguns = 0;
   }
   // refills the dice when empty
-  refill(){
+  refill() {
     game.dice = new ZombieDice();
   }
 
@@ -332,19 +334,6 @@ rollButton.addEventListener("click", function () {
   blastDis.replaceChildren();
   diceDis.replaceChildren();
   tableDiceDisplay.replaceChildren();
-
-  //adds text for the divs
-  var text1 = document.createTextNode("Dice in the Cup:");
-  var text2 = document.createTextNode("Current Roll:");
-  var text3 = document.createTextNode("Brains:");
-  var text4 = document.createTextNode("Blasts:");
-
-  diceDis.appendChild(text1);
-  diceDis.appendChild(tableDiceDisplay);
-  handDis.appendChild(text2);
-  brainDis.appendChild(text3);
-  brainDis.appendChild(br);
-  blastDis.appendChild(text4);
 
   // Displays the rolled blasts
   for (var i = 0; i < game.currentBlast.length; i++) {
