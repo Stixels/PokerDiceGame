@@ -1,99 +1,376 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <!-- CSS -->
-    <link rel="stylesheet" href="zombieDice.css" />
-    <!-- Title -->
-    <title>Zombie Dice</title>
-  </head>
-    <h1 class="center" style="font-size: x-large">Zombie Dice Game</h1>
+//////////////////////////////////////////////////////////
+// JS for accordions
+var acc = document.getElementsByClassName("accordion");
 
-    <!-- How do you play Poker Dice - Accordion -->
-    <button class="accordion">What is Zombie Dice?</button>
-    <div class="panel">
-      <!-- Format rules here -->
-      <p>
-        In Zombie Dice, you are a zombie. You want braaains - more brains than
-        any of your zombie buddies. The 13 custom dice are your victims. Push
-        your luck to eat their brains, but stop rolling before the shotgun
-        blasts end your turn! Whoever collects 13 brains first wins. Each game
-        takes 10 to 20 minutes and can be taught in a single round.
-      </p>
-    </div>
+for (var i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function () {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    }
+  });
+}
+//////////////////////////////////////////////////////////
 
-    <!-- Turn format - Accordion -->
-    <button class="accordion">How do you play?</button>
-    <div class="panel">
-      <!-- format objective here -->
-      <p>
-        Each turn, you take three dice from the box and roll them. A brain
-        symbol is worth one point at the end of the round, while footsteps allow
-        you to reroll this particular dice. Shotgun blasts on the other hand are
-        rather bad, cause if you collect three shotgun blasts during your turn,
-        it is over for you and you get no points. After rolling three dice, you
-        may decide if you want to score your current brain collection or if you
-        want to push your luck by grabbing new dice so you have three again and
-        roll once more.
-      </p>
-    </div>
+// All js for Zombie dice game
+class ZombieDice {
+  constructor() {
+    var brain = 1;
+    var blast = 2;
+    var tracks = 3;
+    this.green = [brain, brain, brain, blast, tracks, tracks];
+    this.yellow = [brain, brain, blast, blast, tracks, tracks];
+    this.red = [brain, blast, blast, blast, tracks, tracks];
+    this.tableDice = [];
+    this.hand = [];
+    this.currentRoll = [];
 
-    <!-- Notes - Accordion -->
-    <button class="accordion">Notes</button>
-    <div class="panel">
-      <!-- format notes here -->
-      Notes on Dice:
-      <ul> 
-        <li>There are 3 types of dice with different risks: green, yellow, red.
-          The green dice have 3 brains, 2 tracks, and 1 shotgun. The yellow dice
-          have 2 of each. The red dice have 1 brain, 3 shotguns, and two tracks.</li>
-        <li>There are 6 green, 4 yellow, and 3 red dice.</li>
-        <li>If you choose to roll, you must roll 3 Dice</li>        
-      </ul>
-      Notes on UI:
-      <ul>
-        <li>The "Dice in the Cup:" will show what dice are left to pick up from (You pick from the right side of the list)</li>
-        <li>When you "Roll", the dice you roll will display in "Current Roll"</li>
-        <li>When you want to bank or have 3 or more blasts, you need to press the "End Turn" button</li>
-      </ul>
-    </div>
+    // constructor makes 13 dice for the game
+    // 6 dice have green risk (3 brain sides, 1 blast side, 2 tracks sides)
+    // 4 dice have yellow risk (2 brain, 2 blast, 2 tracks)
+    // 3 dice have red risk (1 brain, 3 blast, 2 tracks)
+    for (var i = 0; i < 6; i++) {
+      this.tableDice.push(this.green);
+    }
+    for (var i = 0; i < 4; i++) {
+      this.tableDice.push(this.yellow);
+    }
+    for (var i = 0; i < 3; i++) {
+      this.tableDice.push(this.red);
+    }
 
-    <!-- Game Area -->
-    <div class="center">
-      <!-- Future proofing (we might be able pull off 4 players) -->
-      <!-- We would just have to change these to a dynamic for loop -->
-      <div class="columns" id="playersArea">
-        <div class="column" id="player1Area">
-          <label for="player1">Player 1:</label>
-          <input class="players" type="text" id="player1" placeholder="Player 1 Name" />
-        </div>
-        <div class="column" id="player2Area">
-          <label for="player2">Player 2:</label>
-          <input class="players" type="text" id="player2" placeholder="Player 2 Name" />
-        </div>
-      </div>
+    ///////////////////////////////////////////////////
+    // shuffle zombieDice
+    let currentIndex = this.tableDice.length,
+      randomIndex;
+    while (0 !== currentIndex) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      let temporaryValue = this.tableDice[currentIndex];
+      this.tableDice[currentIndex] = this.tableDice[randomIndex];
+      this.tableDice[randomIndex] = temporaryValue;
+    }
+    ///////////////////////////////////////////////////
+  }
 
-      <div id="scoreArea"></div>
-      <button class="button" id="startButton">Start Game</button>
-      <button class="button" id="rollButton">Roll</button>
-      <button class="button" id="endTurnButton">End Turn</button>
-    </div>
-    <br />
-    <div class="center"><h3>Dice in the Cup:</h3>
-    <div class="center" id="rollTable"></div>
-    <div class="center" id="tableDiceDisplay"></div>
-    </div>
+  // get dice Color
+  getColor(dice) {
+    // if dice has 3 brain sides, return green
+    // if dice has 2 brain sides, return yellow
+    // if dice has 1 brain side, return red
+    var brain = 0;
+    for (var i = 0; i < dice.length; i++) {
+      if (dice[i] === 1) {
+        brain++;
+      }
+    }
+    if (brain === 3) {
+      return "Green";
+    } else if (brain === 2) {
+      return "Yellow";
+    } else if (brain === 1) {
+      return "Red";
+    }
+  }
 
-    <div class="columns" id="disTable">
-      <div class="column"><h3>Current Brains:</h3>
-      <div id="brainTable"></div>
-      </div>
-      <div class="column"><h3>Current Roll:</h3>
-      <div id="handTable"></div>
-      </div>
-      <div class="column"><h3>Current Blasts:</h3>
-      <div id="blastTable"></div>
-      </div>
-    </div>
-    <script src="zombieDice.js"></script>
-  </body>
-</html>
+  // get dice face (basically rolls dice)
+  getFace(dice) {
+    // roll dice
+    var face = dice[Math.floor(Math.random() * dice.length)];
+    if (face == 1) {
+      return "Brain";
+    } else if (face == 2) {
+      return "Shotgun";
+    }
+    return "Tracks";
+  }
+
+  // picking up dice
+  pickUp() {
+    if (this.tableDice.length < 3) {
+      game.refill();
+    }
+    this.hand = [];
+    // if blasts > 3, brains and blasts = 0 and end turn
+    if (game.shotguns >= 3) {
+      game.dice.hand = [];
+      game.brains = 0;
+      game.shotguns = 0;
+      game.endTurn();
+    }
+    // adds the color of the dice that were rolled previously to hand
+    if (this.currentRoll.length > 0) {
+      for (var i = 0; i < this.currentRoll.length; i++) {
+        if (this.currentRoll[i] == "Green") {
+          this.hand.push(this.green);
+        } else if (this.currentRoll[i] == "Yellow") {
+          this.hand.push(this.yellow);
+        } else if (this.currentRoll[i] == "Red") {
+          this.hand.push(this.red);
+        }
+      }
+    }
+    // pick up until there are 3 dice in hand
+    while (this.hand.length < 3) {
+      // pickup dice from zombieDices
+      var dice = this.tableDice.pop();
+      // add dice to hand
+      this.hand.push(dice);
+    }
+    this.currentRoll = [];
+  }
+
+  // selects the picture for the dice
+  getDice(color, face) {
+    var pic = document.createElement("img");
+    pic.src = "images/Die" + color + face + ".png";
+    pic.alt = color + " " + face;
+    pic.height = 50;
+    pic.weight = 50;
+    return pic;
+  }
+}
+
+/**
+ * Creates an instance of ZombieDiceGame.
+ * Currently only allows 2 players
+ */
+class Game {
+  constructor(player1, player2) {
+    this.player1 = player1;
+    this.player2 = player2;
+    this.brains = 0;
+    this.shotguns = 0;
+    this.score = [0, 0];
+    this.currentPlayer = this.player1;
+    this.dice = new ZombieDice();
+    this.currentBlast = [];
+    this.currentBrain = [];
+    this.diceDisplay = [];
+  }
+  // saves the blasts that have been rolled
+  getBlast(color, face) {
+    var pic = document.createElement("img");
+    pic.src = "images/Die" + color + face + ".png";
+    pic.alt = color + " " + face;
+    pic.height = 50;
+    pic.weight = 50;
+    this.currentBlast.push(pic);
+  }
+  // saves the dice still in the cup
+  displayTableDice(color) {
+    var pic = document.createElement("img");
+    pic.src = "images/Die" + color + "Tracks.png";
+    pic.alt = color + " Tracks";
+    pic.height = 50;
+    pic.weight = 50;
+    this.diceDisplay.push(pic);
+  }
+  // saves the rolled brains
+  getBrain(color) {
+    var pic = document.createElement("img");
+    pic.src = "images/Die" + color + "Brain.png";
+    pic.alt = color + " Brains";
+    pic.height = 50;
+    pic.weight = 50;
+    this.currentBrain.push(pic);
+  }
+  /**
+   * Switches the current player
+   * We'll need to change this for more players
+   */
+  switchPlayer() {
+    this.currentBlast = [];
+    this.currentBrain = [];
+    if (this.currentPlayer === this.player1) {
+      this.currentPlayer = this.player2;
+    } else {
+      this.currentPlayer = this.player1;
+    }
+  }
+
+  /**
+   * Checks if a player has 13 brains to win the game
+   * @returns {string} - winner of the game or empty string if no winner
+   */
+  checkWinner() {
+    if (this.score[0] >= 13) {
+      return this.player1;
+    } else if (this.score[1] >= 13) {
+      return this.player2;
+    } else {
+      return "";
+    }
+  }
+
+  /**
+   * Ends the current turn, adds brains (if blasts > 3, it will add 0),
+   * switches players, and creates new dice.
+   */
+  endTurn() {
+    // if blasts > 3, brains and blasts = 0 and end turn
+    if (this.shotguns < 3) {
+      if (this.currentPlayer === this.player1) {
+        this.score[0] += this.brains;
+      } else {
+        this.score[1] += this.brains;
+      }
+    }
+    // add brains to score and start new turn
+    this.switchPlayer();
+    // get new dice
+    this.dice = new ZombieDice();
+    // reset brains and blasts
+    this.brains = 0;
+    this.shotguns = 0;
+  }
+  // refills the dice when empty
+  refill() {
+   var tempDice = new ZombieDice();
+    for(i = 0; i < tempDice.length; i++){
+      game.dice.push(tempDice[i]);
+    }
+  }
+
+  /**
+   * Reports the current player's turn and players scores
+   */
+  report() {
+    var report = "";
+    report += "Player 1 Score: " + this.score[0] + "\n";
+    report += "Player 2 Score: " + this.score[1] + "\n";
+    report += "Current Player: " + this.currentPlayer;
+    return report;
+  }
+}
+
+// new line
+var br = document.createElement("br");
+
+var game;
+
+var player1Box = document.getElementById("player1");
+var player2Box = document.getElementById("player2");
+var scoreArea = document.getElementById("scoreArea");
+var startButton = document.getElementById("startButton");
+var rollButton = document.getElementById("rollButton");
+rollButton.disabled = true;
+var endTurnButton = document.getElementById("endTurnButton");
+endTurnButton.disabled = true;
+
+// functionality for start button
+startButton.addEventListener("click", function () {
+  // grab player names from input boxes
+  // (we'll need to change this for more players)
+  var player1 = player1Box.value;
+  var player2 = player2Box.value;
+  if (!player1 || !player2) {
+    // formal code
+    //alert("Please enter a name for both players");
+    // quick debug code
+    game = new Game("Player 1", "Player 2");
+    scoreArea.innerText = game.report();
+    rollButton.disabled = false;
+    endTurnButton.disabled = false;
+  } else {
+    // create new game
+    game = new Game(player1, player2);
+    scoreArea.innerText = game.report();
+    rollButton.disabled = false;
+    endTurnButton.disabled = false;
+  }
+});
+
+rollButton.addEventListener("click", function () {
+  // grab 3 dice from zombieDice
+  game.dice.pickUp();
+  // make hand (list(hand) of lists(dice))
+  var hand = game.dice.hand;
+
+  game.diceDisplay = [];
+  // report dice grabbed
+  var report = document.createElement("div");
+  for (var i = 0; i < hand.length; i++) {
+    // roll and grab color and face of current dice
+    var color = game.dice.getColor(hand[i]);
+    var face = game.dice.getFace(hand[i]);
+    if (face == "Tracks") {
+      game.dice.currentRoll.push(color);
+    }
+    report.appendChild(game.dice.getDice(color, face));
+
+    // add brain to brains and blast to blasts
+    if (face === "Brain") {
+      game.brains++;
+      game.getBrain(color);
+    } else if (face === "Shotgun") {
+      game.shotguns++;
+      game.getBlast(color, face);
+    }
+
+    // disable roll after shotgun >= 3
+    if (game.shotguns >= 3) {
+      rollButton.disabled = true;
+    }
+
+    // check for winner
+    if (game.checkWinner() !== "") {
+      rollButton.disabled = true;
+      endTurnButton.disabled = true;
+      report += game.checkWinner() + " wins!";
+    }
+  }
+
+  var brainDis = document.getElementById("brainTable");
+  var handDis = document.getElementById("handTable");
+  var blastDis = document.getElementById("blastTable");
+  var diceDis = document.getElementById("rollTable");
+  var tableDiceDisplay = document.getElementById("tableDiceDisplay");
+  var reportBlast = document.createElement("div");
+
+  // clears the divs
+  brainDis.replaceChildren();
+  handDis.replaceChildren();
+  blastDis.replaceChildren();
+  diceDis.replaceChildren();
+  tableDiceDisplay.replaceChildren();
+
+  // Displays the rolled blasts
+  for (var i = 0; i < game.currentBlast.length; i++) {
+    reportBlast.appendChild(game.currentBlast[i]);
+  }
+  blastDis.appendChild(reportBlast);
+  scoreArea.innerText = game.report();
+  // Displays the current rolled dice
+  handDis.appendChild(report);
+  // Displays dice in the cup
+  for (var i = 0; i < game.dice.tableDice.length; i++) {
+    colorDis = game.dice.getColor(game.dice.tableDice[i]);
+    game.displayTableDice(colorDis);
+  }
+  for (var i = 0; i < game.diceDisplay.length; i++) {
+    tableDiceDisplay.appendChild(game.diceDisplay[i]);
+  }
+  // Displays the current brains
+  for (var i = 0; i < game.currentBrain.length; i++) {
+    brainDis.appendChild(game.currentBrain[i]);
+  }
+});
+
+endTurnButton.addEventListener("click", function () {
+  // enable roll button
+  rollButton.disabled = false;
+  // ends turn
+  game.endTurn();
+  // check for winner and report
+  var report = "";
+  if (game.checkWinner() !== "") {
+    rollButton.disabled = true;
+    endTurnButton.disabled = true;
+    report += game.checkWinner() + " wins!";
+  }
+  scoreArea.innerText = game.report() + "\n" + report;
+});
