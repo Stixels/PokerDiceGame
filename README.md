@@ -11,11 +11,11 @@
 - ~~Allow players to reroll dice (always 3) until they bank brains or get shot 3 times~~
 - ~~If a player is shot 3 times, they lose all brains accumulated that round~~
 - ~~First player to 13 brains wins~~
-- Better UI to show what dice is on board, in hand, and in the bank
-- Better UI in general let's be honest
+- ~~Better UI to show what dice is on board, in hand, and in the bank~~
+- ~~Better UI in general let's be honest~~
 - ~~Fix rerolling tracks (it just picks up 3 dice right now)~~
 - ~~Fix banking with 3 or more blasts~~
-- Fix end turn display (full tableDice and empty the rest)
+- ~~Fix end turn display (full tableDice and empty the rest)~~
 -  ~~Fix run out of dice (if you run out of dice, refresh dice)~~
 - Allow for more players
 
