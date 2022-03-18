@@ -229,10 +229,7 @@ class Game {
   }
   // refills the dice when empty
   refill() {
-   var tempDice = new ZombieDice();
-    for(i = 0; i < tempDice.length; i++){
-      game.dice.push(tempDice[i]);
-    }
+    this.dice = new ZombieDice();
   }
 
   /**
