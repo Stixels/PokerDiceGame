@@ -90,9 +90,6 @@ class ZombieDice {
 
   // picking up dice
   pickUp() {
-    if (this.tableDice.length < 3) {
-      game.refill();
-    }
     this.hand = [];
     // if blasts > 3, brains and blasts = 0 and end turn
     if (game.shotguns >= 3) {
@@ -121,6 +118,9 @@ class ZombieDice {
       this.hand.push(dice);
     }
     this.currentRoll = [];
+    if (this.tableDice.length < 3) {
+      game.refill();
+    }
   }
 
   // selects the picture for the dice
@@ -150,33 +150,6 @@ class Game {
     this.currentBlast = [];
     this.currentBrain = [];
     this.diceDisplay = [];
-  }
-  // saves the blasts that have been rolled
-  getBlast(color, face) {
-    var pic = document.createElement("img");
-    pic.src = "images/Die" + color + face + ".png";
-    pic.alt = color + " " + face;
-    pic.height = 50;
-    pic.weight = 50;
-    this.currentBlast.push(pic);
-  }
-  // saves the dice still in the cup
-  displayTableDice(color) {
-    var pic = document.createElement("img");
-    pic.src = "images/Die" + color + "Tracks.png";
-    pic.alt = color + " Tracks";
-    pic.height = 50;
-    pic.weight = 50;
-    this.diceDisplay.push(pic);
-  }
-  // saves the rolled brains
-  getBrain(color) {
-    var pic = document.createElement("img");
-    pic.src = "images/Die" + color + "Brain.png";
-    pic.alt = color + " Brains";
-    pic.height = 50;
-    pic.weight = 50;
-    this.currentBrain.push(pic);
   }
   /**
    * Switches the current player
@@ -222,14 +195,38 @@ class Game {
     // add brains to score and start new turn
     this.switchPlayer();
     // get new dice
+    this.diceDisplay = [];
     this.dice = new ZombieDice();
     // reset brains and blasts
     this.brains = 0;
     this.shotguns = 0;
+
+    var brainDis = document.getElementById("brainTable");
+    var handDis = document.getElementById("handTable");
+    var blastDis = document.getElementById("blastTable");
+    var diceDis = document.getElementById("rollTable");
+    var tableDiceDisplay = document.getElementById("tableDiceDisplay");
+
+    // clears the divs
+    brainDis.replaceChildren();
+    handDis.replaceChildren();
+    blastDis.replaceChildren();
+    diceDis.replaceChildren();
+    tableDiceDisplay.replaceChildren();
+
+    // Displays dice in the cup
+    for (var i = 0; i < this.dice.tableDice.length; i++) {
+      colorDis = this.dice.getColor(game.dice.tableDice[i]);
+      var pic = this.dice.getDice(colorDis, "Tracks");
+      this.diceDisplay.push(pic);
+    }
+    for (var i = 0; i < this.diceDisplay.length; i++) {
+      tableDiceDisplay.appendChild(this.diceDisplay[i]);
+    }
   }
   // refills the dice when empty
   refill() {
-    this.dice = new ZombieDice();
+    game.dice = new ZombieDice();
   }
 
   /**
@@ -246,9 +243,7 @@ class Game {
 
 // new line
 var br = document.createElement("br");
-
 var game;
-
 var player1Box = document.getElementById("player1");
 var player2Box = document.getElementById("player2");
 var scoreArea = document.getElementById("scoreArea");
@@ -302,10 +297,10 @@ rollButton.addEventListener("click", function () {
     // add brain to brains and blast to blasts
     if (face === "Brain") {
       game.brains++;
-      game.getBrain(color);
+      game.currentBrain.push(game.dice.getDice(color, "Brain"));
     } else if (face === "Shotgun") {
       game.shotguns++;
-      game.getBlast(color, face);
+      game.currentBlast.push(game.dice.getDice(color, "Shotgun"));
     }
 
     // disable roll after shotgun >= 3
@@ -335,22 +330,26 @@ rollButton.addEventListener("click", function () {
   diceDis.replaceChildren();
   tableDiceDisplay.replaceChildren();
 
+  // Displays dice in the cup
+  for (var i = 0; i < game.dice.tableDice.length; i++) {
+    colorDis = game.dice.getColor(game.dice.tableDice[i]);
+    var pic = game.dice.getDice(colorDis, "Tracks");
+    game.diceDisplay.push(pic);
+  }
+  for (var i = 0; i < game.diceDisplay.length; i++) {
+    tableDiceDisplay.appendChild(game.diceDisplay[i]);
+  }
+
   // Displays the rolled blasts
   for (var i = 0; i < game.currentBlast.length; i++) {
     reportBlast.appendChild(game.currentBlast[i]);
   }
   blastDis.appendChild(reportBlast);
   scoreArea.innerText = game.report();
+
   // Displays the current rolled dice
   handDis.appendChild(report);
-  // Displays dice in the cup
-  for (var i = 0; i < game.dice.tableDice.length; i++) {
-    colorDis = game.dice.getColor(game.dice.tableDice[i]);
-    game.displayTableDice(colorDis);
-  }
-  for (var i = 0; i < game.diceDisplay.length; i++) {
-    tableDiceDisplay.appendChild(game.diceDisplay[i]);
-  }
+
   // Displays the current brains
   for (var i = 0; i < game.currentBrain.length; i++) {
     brainDis.appendChild(game.currentBrain[i]);
