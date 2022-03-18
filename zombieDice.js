@@ -90,9 +90,6 @@ class ZombieDice {
 
   // picking up dice
   pickUp() {
-    if (this.tableDice.length < 3) {
-      game.refill();
-    }
     this.hand = [];
     // if blasts > 3, brains and blasts = 0 and end turn
     if (game.shotguns >= 3) {
@@ -121,6 +118,9 @@ class ZombieDice {
       this.hand.push(dice);
     }
     this.currentRoll = [];
+    if (this.tableDice.length < 3) {
+      game.refill();
+    }
   }
 
   // selects the picture for the dice
@@ -222,17 +222,37 @@ class Game {
     // add brains to score and start new turn
     this.switchPlayer();
     // get new dice
+    this.diceDisplay = [];
     this.dice = new ZombieDice();
     // reset brains and blasts
     this.brains = 0;
     this.shotguns = 0;
+    
+    var brainDis = document.getElementById("brainTable");
+    var handDis = document.getElementById("handTable");
+    var blastDis = document.getElementById("blastTable");
+    var diceDis = document.getElementById("rollTable");
+    var tableDiceDisplay = document.getElementById("tableDiceDisplay");
+
+    // clears the divs
+    brainDis.replaceChildren();
+    handDis.replaceChildren();
+    blastDis.replaceChildren();
+    diceDis.replaceChildren();
+    tableDiceDisplay.replaceChildren();
+
+    // Displays dice in the cup
+    for (var i = 0; i < this.dice.tableDice.length; i++) {
+      colorDis = this.dice.getColor(game.dice.tableDice[i]);
+      this.displayTableDice(colorDis);
+    }
+    for (var i = 0; i < this.diceDisplay.length; i++) {
+      tableDiceDisplay.appendChild(this.diceDisplay[i]);
+    }
   }
   // refills the dice when empty
   refill() {
-   var tempDice = new ZombieDice();
-    for(i = 0; i < tempDice.length; i++){
-      game.dice.push(tempDice[i]);
-    }
+    game.dice = new ZombieDice();
   }
 
   /**
