@@ -1,7 +1,7 @@
 # How to run?
-step 1 download or clone files
-step 2 open zombieDice.html
-step 3 profit
+- step 1 download or clone files 
+- step 2 open zombieDice.html
+- step 3 profit
 
 # To Do
 
