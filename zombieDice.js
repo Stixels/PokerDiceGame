@@ -261,12 +261,12 @@ startButton.addEventListener("click", function () {
   var player2 = player2Box.value;
   if (!player1 || !player2) {
     // formal code
-    //alert("Please enter a name for both players");
+    alert("Please enter a name for both players");
     // quick debug code
-    game = new Game("Player 1", "Player 2");
-    scoreArea.innerText = game.report();
-    rollButton.disabled = false;
-    endTurnButton.disabled = false;
+    // game = new Game("Player 1", "Player 2");
+    // scoreArea.innerText = game.report();
+    // rollButton.disabled = false;
+    // endTurnButton.disabled = false;
   } else {
     // create new game
     game = new Game(player1, player2);
